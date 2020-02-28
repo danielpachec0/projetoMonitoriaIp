@@ -3,9 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from Carro import Carro
 
-arquivos1 = ["test1.txt", "test2.txt", "test3.txt", "test4.txt", "test5.txt", "test13.txt", "test14.txt", "test15.txt"]
-arquivos2 = ["test6.txt", "test7.txt", "test8.txt", "test9.txt", "test10.txt", "test11.txt", "test12.txt"]
-
 def read1(nome):
     arq = open(nome, "r")
     l = arq.readlines()
@@ -20,16 +17,25 @@ def read1(nome):
         aux = l[11].split()
         comb = aux[3]
         motor = aux[9]
-        tran = aux[11]
+        camb = aux[11]
     else:
         val = l[8]
         #print(val)
         aux = l[9].split()
         comb = aux[3]
         motor = aux[9]
-        tran = aux[11]
+        camb = aux[11]
     arq.close()
-    carro = Carro(modelo, modelo[0], ano, km, val, motor, tran, comb, cor)
+    modelo = modelo.strip('\n')
+    marca = modelo.split()[0]
+    cor = cor.strip('\n')
+    ano = ano.strip('\n')
+    motor = motor.strip('\n')
+    comb = comb.strip('\n')
+    val = val.strip('\n')
+    km = km.strip('\n')
+    camb = camb.strip('\n')
+    carro = Carro(modelo, marca, ano, km, val, motor, camb, comb, cor)
     return carro
 
 def read2(nome):
@@ -52,8 +58,20 @@ def read2(nome):
             comb = l[i + 1]
         elif l[i][:8] == 'Potência':
             motor = l[i + 1]
+    arq.close()
+    modelo = modelo.strip('\n')
+    marca = marca.strip('\n')
+    cor = cor.strip('\n')
+    ano = ano.strip('\n')
+    motor = motor.strip('\n')
+    comb = comb.strip('\n')
+    km = km.strip('\n')
+    camb = camb.strip('\n')
     carro = Carro(modelo, marca, ano, km, "nan", motor, camb, comb, cor)
     return carro
+
+arquivos1 = ["test1.txt", "test2.txt", "test3.txt", "test4.txt", "test5.txt", "test13.txt", "test14.txt", "test15.txt"]
+arquivos2 = ["test6.txt", "test7.txt", "test8.txt", "test9.txt", "test10.txt", "test11.txt", "test12.txt"]
 
 carros = []
 
@@ -65,8 +83,17 @@ for i in arquivos2:
     aux = "data/" + i
     carros.append(read2(aux))
 
-print(carros)
+df = pd.DataFrame({"Marca": [],
+                   "Modelo": [],
+                   "Ano": [],
+                   "Kilometragem": [],
+                   "Valor": [],
+                   "Potencia do motor": [],
+                   "Transmissão": [],
+                   "Combustivel": [],
+                   "Cor": []})
 
+for i in carros:
+    df = df.append(i.creat_serie(), ignore_index=True)
 
-
-
+print(df)
