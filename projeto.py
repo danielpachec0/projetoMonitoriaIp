@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from Carro import Carro
@@ -116,13 +115,17 @@ for i in carros:
     df = df.append(i.creat_serie(), ignore_index=True)
 
 # --------------------------------------------------------------------------
+# Grafico pizza - cor do carro
 
 qnt_cor = df["Cor"].value_counts().values
 nome_cor = df["Cor"].value_counts().index
-plt.pie(qnt_cor, labels=list(nome_cor))
+explode = (0.1, 0, 0, 0)
+plt.title("Cor por carro")
+plt.pie(qnt_cor, labels=list(nome_cor), explode=explode, shadow=True, autopct="%1.1f%%")
 plt.show()
 
 # --------------------------------------------------------------------------
+# Grafico de barra - Potencia por veiculo
 
 x = list(df["Modelo"])
 aux2 = 0
@@ -130,14 +133,16 @@ for i in range(len(x)):
     aux = x[i].split()[1]
     if aux in x:
         aux = aux + str(aux2)
-        aux2 = aux2+1
+        aux2 = aux2 + 1
     x[i] = aux
 y = df["Potencia do motor"]
 plt.xticks(rotation=90)
+plt.title("Potencia do motor por veiculo")
 plt.bar(x, y)
 plt.show()
 
 # --------------------------------------------------------------------------
+# Grafico de disperção - Valor por veiculo
 
 x = list(df["Modelo"][df["Valor"] != "nan"])
 aux2 = 0
@@ -145,23 +150,26 @@ for i in range(len(x)):
     aux = x[i].split()[1]
     if aux in x:
         aux = aux + str(aux2)
-        aux2 = aux2+1
+        aux2 = aux2 + 1
     x[i] = aux
 y = df["Valor"][df["Valor"] != "nan"]
-plt.xticks(rotation=90, )
-plt.scatter(x, y)
+plt.xticks(rotation=45)
+plt.title("Disperção dos preços")
+plt.scatter(x, y, marker='x', )
 plt.show()
 
 # --------------------------------------------------------------------------
+# Histograma - frequencia das kilometragens
 
 df.hist(column="Kilometragem")
+plt.title("Histograma - Kilometragem")
 plt.show()
 
 # --------------------------------------------------------------------------
+# Grafico ed barra - numero de carros por montadora
 
 x = df["Marca"].value_counts().index
 y = df["Marca"].value_counts().values
-plt.xticks(rotation=90, )
-plt.bar(x, y)
+plt.title("Numero de veiculos por montadora")
+plt.barh(x, y)
 plt.show()
-
